@@ -9,27 +9,33 @@ namespace LocaSys.Domain
 {
     public class Cliente
     {
-        public Cliente(int id, string nome, string cpf, DateTime dtNascimento)
+        public Cliente(int id, string nome, string cpf, string dtNascimento)
         {
-            if (string.IsNullOrEmpty(nome))
-                throw new ArgumentNullException("Nome é obrigatório.");
+            if (nome is null || nome == String.Empty)
+                throw new ArgumentException("Nome é obrigatório.");
 
             if (nome.Length > 200)
                 throw new ArgumentException("Nome não pode conter mais de 200 caracteres.");
 
-            if (string.IsNullOrEmpty(cpf))
-                throw new ArgumentNullException("Cpf é obrigatório.");
+            if (cpf is null || cpf == String.Empty)
+                throw new ArgumentException("Cpf é obrigatório.");
 
             if (cpf.Length > 11)
                 throw new ArgumentException("Cpf inválido.");
 
-            if (dtNascimento == DateTime.MinValue)
-                throw new ArgumentException("Data inválida.");
+            if(!IsDateTime(dtNascimento))
+                throw new ArgumentException("Data de nascimento inválida.");
 
             Id = id;
             Nome = nome;
             CPF = cpf;
-            DtNascimento = dtNascimento;
+            DtNascimento = DateTime.Parse(dtNascimento);
+        }
+
+        private static bool IsDateTime(string date)
+        {
+            DateTime tempDate;
+            return DateTime.TryParse(date, out tempDate);
         }
 
         public int Id { get; private set; }
